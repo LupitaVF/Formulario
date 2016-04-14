@@ -1,0 +1,357 @@
+<!-DOCTYPE HTML-->
+<html>
+<head>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" type="text/css"/>
+<link rel="stylesheet" href="css/jquery.mobile.theme-1.4.5.min.css" type="text/css"  />
+<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" type="text/css" />
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="js/jquery-2.2.0.min.js" ></script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js" ></script>
+
+<script type="text/javascript">
+
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    
+     $("#btnenviar").tap(function env(){
+         
+         alert("Ripple emilator beta");
+         var nom=$("#txtnombre").val();
+         var aps=$("#txtapp").val();
+         var nc=$("#txtncontrol").val();
+         var Edad=$("#txtedad").val();
+         
+         if(nom==""&& aps=="" && nc=="" && Edad==""  ){
+             alert("Introdusca los datos requeridos en todos los campos");
+         }else{
+            // alert("Se enviaran los datos; nombre"+nom+"Apellidos"+aps+"Numero de control"+nc+"Edad"+Edad);
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/guardar.php",
+                 data:"nomb="+nom+"&apps="+aps+"&numC="+nc+"&Ed="+Edad,
+                 success: exitoso
+             });
+         function exitoso(datos){
+             alert("Respuesta: "+datos);
+         }
+         }
+     });
+     
+     $("#btnConsultar").tap(function consul(){
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/consultar.php",
+                 data:"",
+                 success: function(datos){
+                   //  alert("Respuesta: "+datos);
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#datos");
+                     contenedor.html('<table border="1" id="tb1">\n\
+             <th>Id</th>\n\
+             <th>Nombre</th>\n\
+             <th>Apellidos</th>\n\
+             <th>Numero_Control</th>\n\
+             <th>Edad</th>');// dentro del append es codigo html
+        var fila=$("#tb1");
+        for(var i in reg){
+            fila.append('<tr><td>'+reg[i].Id+'</td><td>'+reg[i].Nombre+'</td><td>'+reg[i].Apellidos+'</td><td>'+reg[i].Numero_control+
+                    '</td><td>'+reg[i].Edad+'</td></tr>');
+        }
+        fila.append('</table>');
+                 }
+           });
+        // function exitoso(datos){
+           //  alert("Respuesta: "+datos);
+        // }
+        // }
+     });
+     
+     $("#btnBuscar").tap(function busq(){
+         var nombre=$("#busNombre").val();
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/buscar.php",
+                 data:"Nombre="+nombre,
+                 success: function(datos){
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#resBusqueda");
+                     contenedor.html('<table border="1" id="tb2">\n\
+             <th>Id</th>\n\
+             <th>Nombre</th>\n\
+             <th>Apellidos</th>\n\
+             <th>Numero_Control</th>\n\
+             <th>Edad</th>');// dentro del append es codigo html
+        var fila=$("#tb2");
+        for(var i in reg){
+            fila.append('<tr><td>'+reg[i].Id+'</td><td>'+reg[i].Nombre+'</td><td>'+reg[i].Apellidos+'</td><td>'+reg[i].Numero_control+
+                    '</td><td>'+reg[i].Edad+'</td></tr>');
+        }
+        fila.append('</table>');
+                 }
+           });
+     });
+     
+     $("#btnConsultar2").tap(function consul(){
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/consultar.php",
+                 data:"",
+                 success: function(datos){
+                   //  alert("Respuesta: "+datos);
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#datos2");
+                     contenedor.html('<table border="1" id="tb3">\n\
+             <th>Id</th>\n\
+             <th>Nombre</th>\n\
+             <th>Apellidos</th>\n\
+             <th>Numero_Control</th>\n\
+             <th>Edad</th>');// dentro del append es codigo html
+        var fila=$("#tb3");
+        for(var i in reg){
+            fila.append('<tr><td>'+reg[i].Id+'</td><td>'+reg[i].Nombre+'</td><td>'+reg[i].Apellidos+'</td><td>'+reg[i].Numero_control+
+                    '</td><td>'+reg[i].Edad+'</td></tr>');
+        }
+        fila.append('</table>');
+                 }
+           });
+        // function exitoso(datos){
+           //  alert("Respuesta: "+datos);
+        // }
+        // }
+     });
+     
+      $("#btnBusqNC").tap(function busq(){
+         var nc=$("#txtNC").val();
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/buscarNC.php",
+                 data:"NC="+nc,
+                 success: function(datos){
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#resBusqNC");
+                     contenedor.html('<input type="text" id="txtModId" disabled="true"><br>');//para no editar
+                     contenedor.append('<input type="text" id="txtModNombre"><br>');
+                     contenedor.append('<input type="text" id="txtModApellidos"><br>');
+                     contenedor.append('<input type="text" id="txtModNumNC" disabled="true"><br>');
+                     contenedor.append('<input type="text" id="txtModEdad"><br>');
+        
+        $("#txtModId").val(reg[0].Id);
+        $("#txtModNombre").val(reg[0].Nombre);
+        $("#txtModApellidos").val(reg[0].Apellidos);
+        $("#txtModNumNC").val(reg[0].Numero_control);
+        $("#txtModEdad").val(reg[0].Edad);
+        
+          
+      
+                 }
+           });
+     });
+   $("#btnActualizar").tap(function modif(){
+      var nombre=$("#txtModNombre").val(); 
+      var apell=$("#txtModApellidos").val(); 
+      var nc=$("#txtModNumNC").val(); 
+      var ed=$("#txtModEdad").val(); 
+      $.ajax({
+         type:"POST",
+                 url:"http://lupita-31.260mb.net/Actualizar.php",
+                 data:"Nombre="+nombre+"&App="+apell+"&NC="+nc+"&Edad="+ed,
+                  success: function(datos){
+                      alert("Respuesta: "+datos);
+                  }
+      });
+   }) ; 
+   
+     $("#btnEliminar").tap(function elimi(){
+   
+      var nombre=$("#txtElimNombre").val(); 
+      var apell=$("#txtElimApellidos").val(); 
+      var nc=$("#txtElimNumNC").val(); 
+      var ed=$("#txtElimEdad").val(); 
+      $.ajax({
+         type:"POST",
+                 url:"http://lupita-31.260mb.net/Eliminar.php",
+                 data:"Nombre="+nombre+"&App="+apell+"&NC="+nc+"&Edad="+ed,
+                  success: function(datos){
+                      alert("Respuesta: "+datos);
+                  }
+      });
+   }) ; 
+    $("#btnConsultar3").tap(function consul(){
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/consultar.php",
+                 data:"",
+                 success: function(datos){
+                   //  alert("Respuesta: "+datos);
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#datos3");
+                     contenedor.html('<table border="1" id="tb4">\n\
+             <th>Id</th>\n\
+             <th>Nombre</th>\n\
+             <th>Apellidos</th>\n\
+             <th>Numero_Control</th>\n\
+             <th>Edad</th>');// dentro del append es codigo html
+        var fila=$("#tb4");
+        for(var i in reg){
+            fila.append('<tr><td>'+reg[i].Id+'</td><td>'+reg[i].Nombre+'</td><td>'+reg[i].Apellidos+'</td><td>'+reg[i].Numero_control+
+                    '</td><td>'+reg[i].Edad+'</td></tr>');
+        }
+        fila.append('</table>');
+                 }
+           });
+        
+     });
+      $("#btnBusqNC1").tap(function busq(){
+         var nc=$("#txtNC1").val();
+             $.ajax({
+                 type:"POST",
+                 url:"http://lupita-31.260mb.net/buscarNC.php",
+                 data:"NC="+nc,
+                 success: function(datos){
+                     var reg=$.parseJSON(datos);//clave para 
+                     var contenedor=$("#resBusqN1");
+                     contenedor.html('<input type="text" id="txtElimId" disabled="true"><br>');//para no editar
+                     contenedor.append('<input type="text" id="txtElimNombre"><br>');
+                     contenedor.append('<input type="text" id="txtElimApellidos"><br>');
+                     contenedor.append('<input type="text" id="txtElimNumNC" disabled="true"><br>');
+                     contenedor.append('<input type="text" id="txtElimEdad"><br>');
+        
+        $("#txtElimId").val(reg[0].Id);
+        $("#txtElimNombre").val(reg[0].Nombre);
+        $("#txtElimApellidos").val(reg[0].Apellidos);
+        $("#txtElimNumNC").val(reg[0].Numero_control);
+        $("#txtElimEdad").val(reg[0].Edad);
+        
+          
+      
+                 }
+           });
+     });
+}
+</script>
+<style type="text/css">
+#encabezado{
+text-align:center;
+font-size: 14px;
+color:red;
+font-weight:bold;
+}
+#pie{
+text-align:center;
+font-size:8px;
+color:green;
+font-weight:bold;
+}
+</style>
+</head>
+<body>
+<div data-role="page" id="principal">
+	<div data-role="header">
+		<h1>Menu</h1>
+	</div>
+
+	<div data-role="content">
+            
+            <a href="#insertar" data-role="button" data-transition="flip">Registrar</a>
+            <a href="#consultar" data-role="button" data-transition="flip">Consultar</a>
+             <a href="#modificar" data-role="button" data-transition="flip">Modificar</a>
+             <a href="#eliminar" data-role="button" data-transition="flip">Eliminar</a>
+  	
+  	
+            
+  	</div>
+
+	<div data-role="footer">
+     	<p> Guadalupe Vazquez Fuentes</p>
+	</div>
+</div>
+    
+    <div data-role="page" id="insertar">
+	<div data-role="header">
+		<h1>Formulario</h1>
+	</div>
+
+	<div data-role="content">
+            <input type="text" value="" placeholder="Escribe tu nombre" id="txtnombre"/>
+             <input type="text" value="" placeholder="Apellidos" id="txtapp"/>
+              <input type="text"  placeholder="Numero de control" id="txtncontrol"/>
+                <input type="text"  placeholder="Edad" id="txtedad"/>
+                  <input type="button" value="Registrar"   id="btnenviar"/>
+  	
+  	<a href="index.html" data-role="button" data-transition="slideup">Regresar</a>
+            
+  	</div>
+
+	<div data-role="footer">
+     	<p> Guadalupe Vazquez Fuentes</p>
+	</div>
+</div>
+    <div data-role="page" id="consultar">
+	<div data-role="header">
+		<h1>Consultar</h1>
+	</div>
+
+	<div data-role="content">
+           
+                  <input type="button" value="Consultar todo"   id="btnConsultar"/>
+                  <div id ="datos"></div>
+                  <input type="text" placeholder="Escribe un nombre" id="busNombre"/>
+                  <input type="button" value="Buscar"   id="btnBuscar"/>
+                  <div id ="resBusqueda"></div>
+                  
+            <a href="index.html" data-role="button" data-transition="slideup">Regresar</a>
+  	</div>
+
+	<div data-role="footer">
+     	<p> Guadalupe Vazquez Fuentes</p>
+	</div>
+</div>
+    <div data-role="page" id="modificar">
+	<div data-role="header">
+		<h1>Modificar</h1>
+	</div>
+
+	<div data-role="content">
+           
+                  <input type="button" value="Consultar todo"   id="btnConsultar2"/>
+                  <div id ="datos2"></div>
+                  <input type="text" placeholder="Escribe el numero de control" id="txtNC"/>
+                  <input type="button" value="Buscar"   id="btnBusqNC"/>
+                  <div id ="resBusqNC"></div>
+                  
+                  <input type="button" id="btnActualizar" value="Actualizar"/>
+            
+                  <a href="index.html" data-role="button" data-transition="slideup">Regresar</a>
+  	</div>
+
+	<div data-role="footer">
+     	<p> Guadalupe Vazquez Fuentes</p>
+	</div>
+</div>
+    
+     <div data-role="page" id="eliminar">
+	<div data-role="header">
+		<h1>Eliminar</h1>
+	</div>
+
+	<div data-role="content">
+           
+                  <input type="button" value="Consultar todo"   id="btnConsultar3"/>
+                  <div id ="datos3"></div>
+                  <input type="text" placeholder="Escribe el numero de control" id="txtNC"/>
+                  <input type="button" value="Buscar"   id="btnBusqNC1"/>
+                  <div id ="resBusqNC1"></div>
+                  
+                  <input type="button" id="btnEliminar" value="Eliminar"/>
+            
+                  <a href="index.html" data-role="button" data-transition="slideup">Regresar</a>
+  	</div>
+
+	<div data-role="footer">
+     	<p> Guadalupe Vazquez Fuentes</p>
+	</div>
+</div>
+</body>
+</html>
